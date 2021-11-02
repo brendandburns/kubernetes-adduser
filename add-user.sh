@@ -21,11 +21,12 @@ cfssl genkey cfssl.json | \
     cfssljson -bare ${cert_name} 
 
 cat <<EOF | kubectl create -f -
-apiVersion: certificates.k8s.io/v1beta1
+apiVersion: certificates.k8s.io/v1
 kind: CertificateSigningRequest
 metadata:
   name: ${csr_name} 
 spec:
+  signerName: kubernetes.io/kube-apiserver-client
   groups:
   - system:authenticated
   request: $(cat ${cert_name}.csr | base64 | tr -d '\n')
